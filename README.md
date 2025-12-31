@@ -21,14 +21,14 @@ handling, authentication management, and typed request/response models.
 
 ## Supported Endpoints
 
-| Category              | Endpoints                                       |
-|-----------------------|-------------------------------------------------|
-| **Consumption**       | Gas and electricity meter consumption data      |
-| **Account**           | Account information and details                 |
-| **Products**          | Product listings and details                    |
+| Category              | Endpoints                                           |
+|-----------------------|-----------------------------------------------------|
+| **Consumption**       | Gas and electricity meter consumption data          |
+| **Account**           | Account information and details                     |
+| **Products**          | Product listings and details                        |
 | **Tariffs**           | Unit rates and standing charges for gas/electricity |
-| **Grid Supply Points**| GSP lookup by postcode                          |
-| **Meter Points**      | Electricity meter point information             |
+| **Grid Supply Points**| GSP lookup by postcode                              |
+| **Meter Points**      | Electricity meter point information                 |
 
 ## Quick Start
 
@@ -143,7 +143,7 @@ Cuttlefish uses opaque types to prevent parameter mix-ups:
 
 ### Configuration
 
-Configure the client via `application.conf`:
+Default client configuration via `application.conf`:
 
 ```hocon
 cuttlefish {
@@ -216,6 +216,6 @@ Cuttlefish is released under the MIT license. See [LICENSE](../LICENSE) for deta
 ## See Also
 
 - [Octopus Energy API Documentation](https://developer.octopus.energy/docs/api/)
+- [Guy Lipman's Octopus API Guide](https://www.guylipman.com/octopus/api_guide.html)
 - [http4s](https://http4s.org/) - Typeful, functional HTTP for Scala
 - [Cats Effect](https://typelevel.org/cats-effect/) - The pure asynchronous runtime for Scala
-- [Guy Lipman's Octopus API Guide](https://www.guylipman.com/octopus/api_guide.html)

@@ -35,7 +35,6 @@ object CuttlefishConfig {
   val config =
     ConfigSource
       .default
-      .withFallback(ConfigSource.resources("secrets.conf"))
       .at("cuttlefish")
       .loadOrThrow[CuttlefishConfig]
 

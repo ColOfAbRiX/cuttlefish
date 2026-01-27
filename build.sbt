@@ -27,11 +27,12 @@ lazy val root =
   project
     .in(file("."))
     .settings(
-      name         := "cuttlefish",
-      version      := "1.0.0",
-      description  := "A functional, type-safe client for the Octopus Energy API",
-      organization := "com.colofabrix.scala",
-      scalaVersion := scala3Version,
+      name          := "cuttlefish",
+      version       := "1.0.0",
+      description   := "A functional, type-safe client for the Octopus Energy API",
+      organization  := "com.colofabrix.scala",
+      scalaVersion  := scala3Version,
+      scalacOptions += "-preview",
       libraryDependencies ++= List(
         "co.fs2"                %% "fs2-io"              % fs2Version,
         "com.colofabrix.scala"  %% "h4sbl"               % h4sbtVersion,

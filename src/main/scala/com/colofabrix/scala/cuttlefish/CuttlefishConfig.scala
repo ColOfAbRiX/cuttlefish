@@ -18,9 +18,16 @@ final case class CuttlefishConfig(
   httpTimeout: FiniteDuration = 30.seconds,
   maxRetries: Int = 5,
   maxRetryTime: FiniteDuration = 1.minute,
+  ignoreSsl: Boolean = true
 ) derives ConfigReader
 
 object CuttlefishConfig {
+
+  val config =
+    ConfigSource
+      .default
+      .at("cuttlefish")
+      .loadOrThrow[CuttlefishConfig]
 
   given ConfigReader[Uri] =
     ConfigReader.fromString:
@@ -31,11 +38,5 @@ object CuttlefishConfig {
     ConfigReader.fromString:
       ConvertHelpers.optF: str =>
         Some(Duration(str)).collect { case fd: FiniteDuration => fd }
-
-  val config =
-    ConfigSource
-      .default
-      .at("cuttlefish")
-      .loadOrThrow[CuttlefishConfig]
 
 }

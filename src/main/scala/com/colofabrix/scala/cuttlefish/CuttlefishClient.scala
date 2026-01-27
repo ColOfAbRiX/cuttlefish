@@ -5,9 +5,11 @@ import cats.effect.std.AtomicCell
 import cats.implicits.given
 import com.colofabrix.scala.cuttlefish.api.*
 import com.colofabrix.scala.cuttlefish.CuttlefishClient.*
-import com.colofabrix.scala.http4s.middleware.betterlogger.ClientLogger
 import com.colofabrix.scala.cuttlefish.model.*
+import com.colofabrix.scala.cuttlefish.security.SSLValidationClient
+import com.colofabrix.scala.http4s.middleware.betterlogger.ClientLogger
 import fs2.io.net.Network
+import fs2.io.net.tls.TLSContext
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 import org.http4s.*
@@ -20,7 +22,6 @@ import org.http4s.Method.*
 import org.http4s.Uri.Path.SegmentEncoder
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import scala.concurrent.duration.*
 
 /**
  * Octopus Client for Scala
@@ -316,23 +317,31 @@ object CuttlefishClient {
     authenticatedClient: Option[Client[F]] = None,
   )
 
+  /**
+   * Creates a new instance of Cuttlefish client using http4s Ember Client
+   */
   def apply[F[_]: Async: Network](maybeConfig: Option[CuttlefishConfig] = None): F[CuttlefishClient[F]] =
+    for
+      config       <- maybeConfig.getOrElse(CuttlefishConfig.config).pure[F]
+      tlsContext   <- buildTlsContext(config)
+      httpClient   <- buildHttpClient(config, tlsContext)
+      initialState <- AtomicCell[F].of(CuttlefishClientState[F](None))
+      client        = new CuttlefishClient[F](httpClient, config, initialState)
+    yield client
+
+  private def buildHttpClient[F[_]: Async: Network](config: CuttlefishConfig, tlsContext: TLSContext[F]): F[Client[F]] =
     EmberClientBuilder
       .default[F]
-      .withTimeout(maybeConfig.map(_.httpTimeout).getOrElse(30.seconds))
+      .withTimeout(config.httpTimeout)
+      .withTLSContext(tlsContext)
       .build
       .allocated
-      .flatMap {
-        case (httpClient, _) =>
-          val config = maybeConfig.getOrElse(CuttlefishConfig.config)
-          CuttlefishClient(config, httpClient)
+      .map {
+        case (httpClient, _) => ClientLogger(SSLValidationClient(config.ignoreSsl)(httpClient))
       }
 
-  private def apply[F[_]: Async](config: CuttlefishConfig, httpClient: Client[F]): F[CuttlefishClient[F]] =
-    for
-      initialState    <- AtomicCell[F].of(CuttlefishClientState[F](None))
-      loggedHttpClient = ClientLogger(httpClient)
-      client           = new CuttlefishClient[F](loggedHttpClient, config, initialState)
-    yield client
+  private def buildTlsContext[F[_]: Network](config: CuttlefishConfig): F[TLSContext[F]] =
+    if config.ignoreSsl then Network[F].tlsContext.insecure
+    else Network[F].tlsContext.system
 
 }

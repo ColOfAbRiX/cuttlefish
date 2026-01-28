@@ -10,7 +10,7 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 import org.http4s.client.Client
 
-object SSLValidationClient {
+private[cuttlefish] object SSLValidationClient {
 
   def apply[F[_]: MonadCancelThrow](ignoreSsl: Boolean)(httpClient: Client[F]): Client[F] =
     Client[F] { request =>

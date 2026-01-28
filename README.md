@@ -19,6 +19,20 @@ handling, authentication management, and typed request/response models.
 - **Comprehensive Coverage** - Supports consumption data, tariffs, products, and account endpoints
 - **Streaming Ready** - Returns `F[_]` effects compatible with fs2 streams
 
+## Installation
+
+Add the following to your `build.sbt`:
+
+```scala
+libraryDependencies += "com.colofabrix.scala" %% "cuttlefish" % "1.0.0"
+```
+
+For Mill:
+
+```scala
+ivy"com.colofabrix.scala::cuttlefish:1.0.0"
+```
+
 ## Supported Endpoints
 
 | Category              | Endpoints                                           |
@@ -207,7 +221,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-Cuttlefish is released under the MIT license. See [LICENSE](../LICENSE) for details.
+Cuttlefish is released under the MIT license. See [LICENSE](LICENSE) for details.
 
 ## Author
 

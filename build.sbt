@@ -1,5 +1,4 @@
 import org.typelevel.scalacoptions.ScalacOptions
-import xerial.sbt.Sonatype._
 
 // Project Information
 
@@ -38,6 +37,7 @@ lazy val root =
         "com.colofabrix.scala"  %% "h4sbl"               % h4sbtVersion,
         "com.github.pureconfig" %% "pureconfig-core"     % pureconfigVersion,
         "io.circe"              %% "circe-core"          % circeCoreVersion,
+        "io.circe"              %% "circe-parser"        % circeCoreVersion % Test,
         "org.http4s"            %% "http4s-circe"        % http4sClientVersion,
         "org.http4s"            %% "http4s-client"       % http4sClientVersion,
         "org.http4s"            %% "http4s-core"         % http4sClientVersion,
@@ -81,9 +81,6 @@ lazy val publishSettings =
     ),
     pomIncludeRepository := { _ => false },
     publishMavenStyle    := true,
-    sonatypeProjectHosting := Some(
-      GitHubHosting("ColOfAbRiX", "cuttlefish", "colofabrix@tin.it"),
-    ),
     publishTo := {
       if (isSnapshot.value)
         Some(Resolver.sonatypeCentralSnapshots)
